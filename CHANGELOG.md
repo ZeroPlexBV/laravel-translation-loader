@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-translation-loader` will be documented in this file
 
+## 10.2.0 - 2026-11-24
+
+- Laravel's own texts (`auth`, `validation`, `passwords`, `pagination`) are found again instead of being shown as keys
+- Dutch and German versions of those texts; the application's own files and the database still win
+- a language line without a namespace no longer throws a `TypeError`; it belongs to the application's own texts (`*`)
+- drop support for Laravel 9 and older, and for PHP 8.0
+- the whole test suite runs again, also on Laravel 13
+
 [//]: # (TODO: Update version when decided)
 
 ## 3.0.0 - 2024-07-23

@@ -57,6 +57,9 @@ class LanguageLine extends Model
             return [];
         }
 
+        // The application's own texts are stored under '*', which is also the column's default.
+        $namespace ??= '*';
+
         return Cache::rememberForever(static::getCacheKey($namespace, $group, $locale), function () use ($namespace, $group, $locale) {
             return static::query()
                 ->where('namespace', $namespace)
@@ -78,8 +81,10 @@ class LanguageLine extends Model
         });
     }
 
-    public static function getCacheKey(string $namespace, string $group, string $locale): string
+    public static function getCacheKey(string|null $namespace, string $group, string $locale): string
     {
+        $namespace ??= '*';
+
         return "spatie.translation-loader.$namespace.$group.$locale";
     }
 

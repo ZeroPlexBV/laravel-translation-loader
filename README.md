@@ -62,6 +62,8 @@ php artisan vendor:publish --provider="Spatie\TranslationLoader\TranslationServi
 php artisan migrate
 ```
 
+On Laravel 10 that migration needs `doctrine/dbal`: `composer require doctrine/dbal:^3.0`.
+
 Optionally, you could publish the config file using this command.
 
 ```bash
@@ -133,6 +135,20 @@ You can still keep using the default language files as well. If a requested tran
 and the language files, the database version will be returned.
 
 If you need to store/override JSON translation lines, just create a normal LanguageLine with `group => '*'`.
+
+## Laravel's own texts
+
+Laravel's built-in `auth`, `validation`, `passwords` and `pagination` texts work without publishing any language file.
+Laravel ships them in English; this package adds Dutch (`nl`) and German (`de`). A text is taken from the last place in
+this list that has it:
+
+1. Laravel itself (English)
+2. this package's `lang` folder (Dutch and German)
+3. the `lang` folder of your application
+4. the database
+
+So your own files and database lines always win, also for a single key. Other languages fall back to your fallback
+locale. The field names inside validation messages (`attributes`) are up to your application.
 
 ## Creating your own translation providers
 

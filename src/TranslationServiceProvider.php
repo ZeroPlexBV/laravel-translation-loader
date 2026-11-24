@@ -3,7 +3,9 @@
 namespace Spatie\TranslationLoader;
 
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\Translator;
+use ReflectionClass;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -38,8 +40,24 @@ class TranslationServiceProvider extends PackageServiceProvider implements Defer
         $this->app->singleton('translation.loader', function ($app) {
             $class = config('translation-loader.translation_manager');
 
-            return new $class($app['files'], $app['path.lang']);
+            return new $class($app['files'], $this->languagePaths($app['path.lang']));
         });
+    }
+
+    /**
+     * The folders language files are read from, later ones winning: Laravel's own texts (English),
+     * this package's copies of them in other languages, and the application's lang folder. They
+     * are passed together because a path added to the loader later would win from the application.
+     *
+     * @param  string  $applicationPath
+     *
+     * @return array<string>
+     */
+    protected function languagePaths(string $applicationPath): array
+    {
+        $frameworkPath = dirname((new ReflectionClass(FileLoader::class))->getFileName()) . '/lang';
+
+        return [$frameworkPath, dirname(__DIR__) . '/lang', $applicationPath];
     }
 
     /**
